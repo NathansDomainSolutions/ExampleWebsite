@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Restaurant Website Demo · Swipe through the styles</title>
+  <meta name="description" content="A live demo of restaurant website designs. Swipe between styles to see what your restaurant's site could look like." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&family=Lora:wght@400;600&family=Monoton&family=Oswald:wght@400;600&family=Pacifico&family=Playfair+Display:wght@600;800&family=Rubik:wght@400;600;800&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body data-theme="ember">
+
+  <!-- ============ DEMO CONTROL BAR (not part of the client's site) ============ -->
+  <div class="demo-bar" role="region" aria-label="Demo controls">
+    <span class="demo-pill">DEMO</span>
+    <button class="demo-arrow" id="prevTheme" aria-label="Previous style">‹</button>
+    <div class="demo-current">
+      <strong id="themeLabel">Rustic Steakhouse</strong>
+      <span id="themeCount">1 / 6</span>
+    </div>
+    <button class="demo-arrow" id="nextTheme" aria-label="Next style">›</button>
+    <div class="demo-dots" id="themeDots"></div>
+    <span class="demo-hint">Swipe or use ← → keys</span>
+    <label class="demo-toggle">
+      <input type="checkbox" id="notesToggle" checked /> Show notes
+    </label>
+  </div>
+
+  <div class="swipe-hint" id="swipeHint" aria-hidden="true">
+    <span>👆 Swipe left or right to change the whole design</span>
+  </div>
+
+  <!-- ============ THE RESTAURANT SITE (rendered by js/app.js) ============ -->
+  <div class="site" id="site">
+
+    <header class="site-header">
+      <a href="#top" class="logo"><span class="logo-mark" data-bind="logoMark"></span><span data-bind="name"></span></a>
+      <nav class="site-nav" id="siteNav">
+        <a href="#menu">Menu</a>
+        <a href="#about">About</a>
+        <a href="#visit">Visit</a>
+        <a href="#feedback">Feedback</a>
+      </nav>
+      <a href="#visit" class="btn btn-primary btn-sm demo-action" data-action="reserve">Reserve</a>
+      <button class="nav-burger" id="navBurger" aria-label="Open menu">☰</button>
+    </header>
+
+    <main id="top">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-inner">
+          <p class="eyebrow" data-bind="eyebrow"></p>
+          <h1 class="hero-title" data-bind="name"></h1>
+          <p class="hero-tagline" data-bind="tagline"></p>
+          <div class="hero-actions">
+            <a href="#menu" class="btn btn-primary">View Menu</a>
+            <a href="#" class="btn btn-ghost demo-action" data-action="order">Order Online</a>
+          </div>
+          <p class="open-status" id="openStatus"></p>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="hero-plate"><span data-bind="heroEmoji"></span></div>
+        </div>
+      </section>
+
+      <!-- HIGHLIGHTS -->
+      <section class="highlights" id="highlights"></section>
+
+      <!-- ABOUT -->
+      <section class="section about" id="about">
+        <div class="section-head">
+          <p class="eyebrow">Our story</p>
+          <h2>About <span data-bind="name"></span></h2>
+        </div>
+        <div class="about-grid">
+          <p class="about-text" data-bind="about"></p>
+          <div class="stats" id="stats"></div>
+        </div>
+      </section>
+
+      <!-- MENU -->
+      <section class="section menu" id="menu">
+        <div class="section-head">
+          <p class="eyebrow">Eat &amp; drink</p>
+          <h2>The Menu</h2>
+        </div>
+
+        <div class="demo-note">
+          <strong>Menu options</strong>
+          Pick the layout that suits your food: a classic <em>list</em>, photo-style <em>cards</em>, or a <em>compact</em> board.
+          Customers can filter by dietary needs, and you can send me price or dish changes anytime.
+        </div>
+
+        <div class="menu-controls">
+          <div class="menu-tabs" id="menuTabs" role="tablist"></div>
+          <div class="menu-tools">
+            <div class="diet-filters" id="dietFilters"></div>
+            <div class="layout-switch" role="group" aria-label="Menu layout">
+              <button data-layout="list">List</button>
+              <button data-layout="grid">Cards</button>
+              <button data-layout="compact">Compact</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-items" id="menuItems"></div>
+
+        <div class="menu-footer">
+          <button class="btn btn-ghost btn-sm demo-action" data-action="pdf">⬇ Download PDF menu</button>
+          <span class="muted">Prices and availability may change. Please tell your server about allergies.</span>
+        </div>
+      </section>
+
+      <!-- REVIEWS -->
+      <section class="section reviews">
+        <div class="section-head">
+          <p class="eyebrow">Kind words</p>
+          <h2>What guests say</h2>
+        </div>
+        <div class="demo-note"><strong>Reviews</strong> Sample quotes. On your site these can pull in your real Google or Yelp reviews automatically.</div>
+        <div class="review-grid" id="reviews"></div>
+      </section>
+
+      <!-- VISIT -->
+      <section class="section visit" id="visit">
+        <div class="section-head">
+          <p class="eyebrow">Come by</p>
+          <h2>Hours &amp; Location</h2>
+        </div>
+        <div class="visit-grid">
+          <div class="card">
+            <h3>Hours</h3>
+            <table class="hours" id="hoursTable"></table>
+          </div>
+          <div class="card">
+            <h3>Find us</h3>
+            <p class="address" data-bind="address"></p>
+            <p><a class="phone-link" id="phoneLink" href="#"><span data-bind="phone"></span></a></p>
+            <div class="map-placeholder" aria-label="Map placeholder">
+              <div class="map-pin">📍</div>
+              <span>Live Google Map goes here</span>
+            </div>
+            <div class="visit-actions">
+              <a href="#" class="btn btn-primary btn-sm demo-action" data-action="directions">Get Directions</a>
+              <a href="#" class="btn btn-ghost btn-sm demo-action" data-action="reserve">Book a Table</a>
+            </div>
+          </div>
+        </div>
+        <div class="demo-note"><strong>Always up to date</strong> The "Open now / Closed" badge updates on its own from your hours. The phone number is tap-to-call on mobile.</div>
+      </section>
+
+      <!-- FEEDBACK -->
+      <section class="section feedback" id="feedback">
+        <div class="section-head">
+          <p class="eyebrow">We're listening</p>
+          <h2>Leave us feedback</h2>
+        </div>
+
+        <div class="feedback-grid">
+          <form class="card feedback-form" id="feedbackForm" novalidate>
+            <div class="field-row">
+              <label>Your name
+                <input type="text" name="name" placeholder="Jane Smith" required />
+              </label>
+              <label>Email <span class="muted">(so we can reply)</span>
+                <input type="email" name="email" placeholder="jane@example.com" />
+              </label>
+            </div>
+            <label>How was your visit?</label>
+            <div class="stars" id="stars" role="radiogroup" aria-label="Rating">
+              <button type="button" data-v="1" aria-label="1 star">★</button>
+              <button type="button" data-v="2" aria-label="2 stars">★</button>
+              <button type="button" data-v="3" aria-label="3 stars">★</button>
+              <button type="button" data-v="4" aria-label="4 stars">★</button>
+              <button type="button" data-v="5" aria-label="5 stars">★</button>
+            </div>
+            <label>Topic
+              <select name="topic">
+                <option>General feedback</option>
+                <option>Food &amp; drinks</option>
+                <option>Service</option>
+                <option>Private events / catering</option>
+                <option>Something went wrong</option>
+              </select>
+            </label>
+            <label>Message
+              <textarea name="message" rows="4" placeholder="Tell us about your visit..." required></textarea>
+            </label>
+            <button type="submit" class="btn btn-primary">Send feedback</button>
+            <p class="form-error" id="formError" role="alert"></p>
+          </form>
+
+          <aside class="card routing" id="routing">
+            <h3>Where does this go?</h3>
+            <p class="routing-intro">
+              This is a demo form, so nothing is actually sent. On a live site, every message goes
+              <strong>straight to the owner's inbox</strong>:
+            </p>
+            <ol class="route-steps" id="routeSteps">
+              <li data-step="1"><span class="route-icon">✍️</span><div><strong>Customer writes a message</strong><small>Right here, on any phone or computer</small></div></li>
+              <li data-step="2"><span class="route-icon">🛡️</span><div><strong>Spam filter checks it</strong><small>Bots and junk are blocked automatically</small></div></li>
+              <li data-step="3"><span class="route-icon">📧</span><div><strong>Emailed to <span class="owner-email" data-bind="ownerEmail"></span></strong><small>Usually within seconds</small></div></li>
+              <li data-step="4"><span class="route-icon">📲</span><div><strong>Optional text alert</strong><small>For low ratings, so you can make it right fast</small></div></li>
+              <li data-step="5"><span class="route-icon">💬</span><div><strong>Auto-reply to the customer</strong><small>"Thanks! We read every message."</small></div></li>
+            </ol>
+            <div class="email-preview" id="emailPreview" hidden></div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-brand">
+        <span class="logo-mark" data-bind="logoMark"></span>
+        <strong data-bind="name"></strong>
+        <p class="muted" data-bind="address"></p>
+      </div>
+      <div class="footer-links">
+        <a href="#menu">Menu</a><a href="#about">About</a><a href="#visit">Visit</a><a href="#feedback">Feedback</a>
+      </div>
+      <div class="socials">
+        <a href="#" class="demo-action" data-action="social" aria-label="Instagram">IG</a>
+        <a href="#" class="demo-action" data-action="social" aria-label="Facebook">FB</a>
+        <a href="#" class="demo-action" data-action="social" aria-label="TikTok">TT</a>
+      </div>
+      <p class="copyright">© <span id="year"></span> <span data-bind="name"></span>. A fictional restaurant.</p>
+    </footer>
+  </div>
+
+  <!-- ============ SELLER CALL-TO-ACTION (not part of the client's site) ============ -->
+  <section class="seller-cta" id="sellerCta">
+    <div>
+      <p class="seller-kicker">Like what you see?</p>
+      <h2>Get a website like this for your restaurant.</h2>
+      <ul class="seller-list">
+        <li>✓ Custom design in your colors and style</li>
+        <li>✓ Hosting, domain and SSL handled for you</li>
+        <li>✓ Menu, hours and photo updates whenever you need</li>
+        <li>✓ Feedback and reservation forms sent to your email</li>
+        <li>✓ Looks great on phones, where most of your customers are</li>
+      </ul>
+    </div>
+    <div class="seller-contact">
+      <p class="seller-name" id="sellerName"></p>
+      <a class="btn seller-btn" id="sellerEmail" href="#"></a>
+      <a class="seller-phone" id="sellerPhone" href="#"></a>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/themes.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
