@@ -28,6 +28,6 @@ A live sales demo for restaurant websites. It's one page with five complete desi
 
 ## Hosting
 The site is plain HTML, CSS and JS, so there's no build step. To publish it, go to Settings → Pages → Deploy from a branch and pick `main` / root. It will then be live at
-`https://carriestelekinesis.github.io/ExampleWebsite/`.
+`https://nathansdomainsolutions.github.io/ExampleWebsite/`.
 
 The feedback form is only a demo and sends nothing. For a real client, connect it to Formspree, Netlify Forms, or a small serverless function that emails the owner.
