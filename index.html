@@ -3,33 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Restaurant Website Demo · Swipe through the styles</title>
-  <meta name="description" content="A live demo of restaurant website designs. Swipe between styles to see what your restaurant's site could look like." />
+  <title>Restaurant Website Examples</title>
+  <meta name="description" content="Example restaurant websites. Swipe between styles to see what your restaurant's site could look like with your own photos, menu and colors." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&family=Lora:wght@400;600&family=Monoton&family=Oswald:wght@400;600&family=Pacifico&family=Playfair+Display:wght@600;800&family=Rubik:wght@400;600;800&family=Shippori+Mincho:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600;700&family=Lora:wght@400;600&family=Oswald:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body data-theme="ember">
+<body data-theme="pub">
 
   <!-- ============ DEMO CONTROL BAR (not part of the client's site) ============ -->
   <div class="demo-bar" role="region" aria-label="Demo controls">
-    <span class="demo-pill">DEMO</span>
+    <span class="demo-pill">Example</span>
     <button class="demo-arrow" id="prevTheme" aria-label="Previous style">‹</button>
     <div class="demo-current">
-      <strong id="themeLabel">Rustic Steakhouse</strong>
-      <span id="themeCount">1 / 6</span>
+      <strong id="themeLabel">Pizzeria &amp; Sports Bar</strong>
+      <span id="themeCount">1 / 5</span>
     </div>
     <button class="demo-arrow" id="nextTheme" aria-label="Next style">›</button>
     <div class="demo-dots" id="themeDots"></div>
-    <span class="demo-hint">Swipe or use ← → keys</span>
+    <span class="demo-hint">Swipe or use the arrow keys to see another style</span>
     <label class="demo-toggle">
       <input type="checkbox" id="notesToggle" checked /> Show notes
     </label>
   </div>
 
   <div class="swipe-hint" id="swipeHint" aria-hidden="true">
-    <span>👆 Swipe left or right to change the whole design</span>
+    <span>Swipe left or right for another style</span>
   </div>
 
   <!-- ============ THE RESTAURANT SITE (rendered by js/app.js) ============ -->
@@ -39,45 +39,70 @@
       <a href="#top" class="logo"><span class="logo-mark" data-bind="logoMark"></span><span data-bind="name"></span></a>
       <nav class="site-nav" id="siteNav">
         <a href="#menu">Menu</a>
+        <a href="#gallery">Photos</a>
         <a href="#about">About</a>
         <a href="#visit">Visit</a>
-        <a href="#feedback">Feedback</a>
       </nav>
-      <a href="#visit" class="btn btn-primary btn-sm demo-action" data-action="reserve">Reserve</a>
+      <a href="#" class="btn btn-primary btn-sm demo-action" id="headerCta" data-action="order">Order Online</a>
       <button class="nav-burger" id="navBurger" aria-label="Open menu">☰</button>
     </header>
 
     <main id="top">
       <!-- HERO -->
-      <section class="hero">
+      <section class="hero" id="hero">
+        <div class="hero-media" aria-hidden="true"></div>
         <div class="hero-inner">
           <p class="eyebrow" data-bind="eyebrow"></p>
           <h1 class="hero-title" data-bind="name"></h1>
           <p class="hero-tagline" data-bind="tagline"></p>
           <div class="hero-actions">
-            <a href="#menu" class="btn btn-primary">View Menu</a>
-            <a href="#" class="btn btn-ghost demo-action" data-action="order">Order Online</a>
+            <a href="#menu" class="btn btn-primary">See the Menu</a>
+            <a href="#" class="btn btn-ghost demo-action" data-action="call"><span>Call </span><span data-bind="phone"></span></a>
           </div>
           <p class="open-status" id="openStatus"></p>
         </div>
-        <div class="hero-art" aria-hidden="true">
-          <div class="hero-plate"><span data-bind="heroEmoji"></span></div>
-        </div>
       </section>
+      <div class="demo-note demo-note-hero"><strong>Your photos</strong><span data-bind="heroNote"></span></div>
 
       <!-- HIGHLIGHTS -->
       <section class="highlights" id="highlights"></section>
 
       <!-- ABOUT -->
       <section class="section about" id="about">
-        <div class="section-head">
-          <p class="eyebrow">Our story</p>
-          <h2>About <span data-bind="name"></span></h2>
-        </div>
         <div class="about-grid">
-          <p class="about-text" data-bind="about"></p>
-          <div class="stats" id="stats"></div>
+          <figure class="about-photo"><img id="aboutImg" alt="" loading="lazy" /></figure>
+          <div>
+            <p class="eyebrow">Our story</p>
+            <h2>About <span data-bind="name"></span></h2>
+            <p class="about-text" data-bind="about"></p>
+            <div class="stats" id="stats"></div>
+          </div>
         </div>
+      </section>
+
+      <!-- FEATURE (different for every restaurant) -->
+      <section class="section feature" id="feature">
+        <div class="feature-grid">
+          <div class="feature-copy">
+            <p class="eyebrow" id="featureKicker"></p>
+            <h2 id="featureTitle"></h2>
+            <p id="featureText"></p>
+            <ul class="feature-list" id="featureList"></ul>
+            <a href="#" class="btn btn-primary demo-action" id="featureCta"></a>
+          </div>
+          <figure class="feature-photo"><img id="featureImg" alt="" loading="lazy" /></figure>
+        </div>
+        <div class="demo-note"><strong>Built around the business</strong><span data-bind="featureNote"></span></div>
+      </section>
+
+      <!-- GALLERY -->
+      <section class="section gallery" id="gallery">
+        <div class="section-head">
+          <p class="eyebrow">Photos</p>
+          <h2>Have a look around</h2>
+        </div>
+        <div class="gallery-grid" id="galleryGrid"></div>
+        <div class="demo-note"><strong>Photo galleries</strong>Food, the dining room, the staff, the patio, last weekend's party. Add as many photos as you like and swap them whenever you want. Tap any photo to see it full size.</div>
       </section>
 
       <!-- MENU -->
@@ -88,9 +113,8 @@
         </div>
 
         <div class="demo-note">
-          <strong>Menu options</strong>
-          Pick the layout that suits your food: a classic <em>list</em>, photo-style <em>cards</em>, or a <em>compact</em> board.
-          Customers can filter by dietary needs, and you can send me price or dish changes anytime.
+          <strong>Menus</strong>
+          Show the menu as a classic <em>list</em>, as <em>cards</em> with photos of each dish, or as a <em>compact</em> board. It can also be a downloadable PDF, or both. Prices and dishes change whenever you tell me.
         </div>
 
         <div class="menu-controls">
@@ -108,8 +132,8 @@
         <div class="menu-items" id="menuItems"></div>
 
         <div class="menu-footer">
-          <button class="btn btn-ghost btn-sm demo-action" data-action="pdf">⬇ Download PDF menu</button>
-          <span class="muted">Prices and availability may change. Please tell your server about allergies.</span>
+          <button class="btn btn-ghost btn-sm demo-action" data-action="pdf">Download PDF menu</button>
+          <span class="muted">Prices and availability may change. Please tell us about any allergies.</span>
         </div>
       </section>
 
@@ -117,10 +141,10 @@
       <section class="section reviews">
         <div class="section-head">
           <p class="eyebrow">Kind words</p>
-          <h2>What guests say</h2>
+          <h2>What people say</h2>
         </div>
-        <div class="demo-note"><strong>Reviews</strong> Sample quotes. On your site these can pull in your real Google or Yelp reviews automatically.</div>
         <div class="review-grid" id="reviews"></div>
+        <div class="demo-note"><strong>Reviews</strong>These are samples. Your site can show your real Google or Yelp reviews.</div>
       </section>
 
       <!-- VISIT -->
@@ -139,16 +163,16 @@
             <p class="address" data-bind="address"></p>
             <p><a class="phone-link" id="phoneLink" href="#"><span data-bind="phone"></span></a></p>
             <div class="map-placeholder" aria-label="Map placeholder">
-              <div class="map-pin">📍</div>
-              <span>Live Google Map goes here</span>
+              <span class="map-pin" aria-hidden="true"></span>
+              <span>Google Map of your location</span>
             </div>
             <div class="visit-actions">
               <a href="#" class="btn btn-primary btn-sm demo-action" data-action="directions">Get Directions</a>
-              <a href="#" class="btn btn-ghost btn-sm demo-action" data-action="reserve">Book a Table</a>
+              <a href="#feedback" class="btn btn-ghost btn-sm">Send us a message</a>
             </div>
           </div>
         </div>
-        <div class="demo-note"><strong>Always up to date</strong> The "Open now / Closed" badge updates on its own from your hours. The phone number is tap-to-call on mobile.</div>
+        <div class="demo-note"><strong>Always up to date</strong>The "Open now" badge updates by itself from your hours, and the phone number is tap-to-call on phones.</div>
       </section>
 
       <!-- FEEDBACK -->
@@ -181,7 +205,7 @@
                 <option>General feedback</option>
                 <option>Food &amp; drinks</option>
                 <option>Service</option>
-                <option>Private events / catering</option>
+                <option>Catering / private events</option>
                 <option>Something went wrong</option>
               </select>
             </label>
@@ -195,15 +219,15 @@
           <aside class="card routing" id="routing">
             <h3>Where does this go?</h3>
             <p class="routing-intro">
-              This is a demo form, so nothing is actually sent. On a live site, every message goes
+              This is an example, so nothing is actually sent. On a real site, every message goes
               <strong>straight to the owner's inbox</strong>:
             </p>
             <ol class="route-steps" id="routeSteps">
-              <li data-step="1"><span class="route-icon">✍️</span><div><strong>Customer writes a message</strong><small>Right here, on any phone or computer</small></div></li>
-              <li data-step="2"><span class="route-icon">🛡️</span><div><strong>Spam filter checks it</strong><small>Bots and junk are blocked automatically</small></div></li>
-              <li data-step="3"><span class="route-icon">📧</span><div><strong>Emailed to <span class="owner-email" data-bind="ownerEmail"></span></strong><small>Usually within seconds</small></div></li>
-              <li data-step="4"><span class="route-icon">📲</span><div><strong>Optional text alert</strong><small>For low ratings, so you can make it right fast</small></div></li>
-              <li data-step="5"><span class="route-icon">💬</span><div><strong>Auto-reply to the customer</strong><small>"Thanks! We read every message."</small></div></li>
+              <li data-step="1"><span class="route-icon">1</span><div><strong>Customer writes a message</strong><small>Right here, on any phone or computer</small></div></li>
+              <li data-step="2"><span class="route-icon">2</span><div><strong>Spam filter checks it</strong><small>Bots and junk are blocked automatically</small></div></li>
+              <li data-step="3"><span class="route-icon">3</span><div><strong>Emailed to <span class="owner-email" data-bind="ownerEmail"></span></strong><small>Usually within seconds</small></div></li>
+              <li data-step="4"><span class="route-icon">4</span><div><strong>Optional text alert</strong><small>For low ratings, so you can make it right fast</small></div></li>
+              <li data-step="5"><span class="route-icon">5</span><div><strong>Auto-reply to the customer</strong><small>"Thanks! We read every message."</small></div></li>
             </ol>
             <div class="email-preview" id="emailPreview" hidden></div>
           </aside>
@@ -215,39 +239,66 @@
       <div class="footer-brand">
         <span class="logo-mark" data-bind="logoMark"></span>
         <strong data-bind="name"></strong>
-        <p class="muted" data-bind="address"></p>
+        <p class="muted"><span data-bind="address"></span> · <span data-bind="phone"></span></p>
       </div>
       <div class="footer-links">
-        <a href="#menu">Menu</a><a href="#about">About</a><a href="#visit">Visit</a><a href="#feedback">Feedback</a>
+        <a href="#menu">Menu</a><a href="#gallery">Photos</a><a href="#about">About</a><a href="#visit">Visit</a>
       </div>
       <div class="socials">
-        <a href="#" class="demo-action" data-action="social" aria-label="Instagram">IG</a>
-        <a href="#" class="demo-action" data-action="social" aria-label="Facebook">FB</a>
-        <a href="#" class="demo-action" data-action="social" aria-label="TikTok">TT</a>
+        <a href="#" class="demo-action" data-action="social">Instagram</a>
+        <a href="#" class="demo-action" data-action="social">Facebook</a>
       </div>
-      <p class="copyright">© <span id="year"></span> <span data-bind="name"></span>. A fictional restaurant.</p>
+      <p class="copyright">© <span id="year"></span> <span data-bind="name"></span>. A fictional restaurant used as an example.</p>
     </footer>
   </div>
 
-  <!-- ============ SELLER CALL-TO-ACTION (not part of the client's site) ============ -->
+  <!-- ============ SELLER SECTION (not part of the client's site) ============ -->
   <section class="seller-cta" id="sellerCta">
-    <div>
-      <p class="seller-kicker">Like what you see?</p>
-      <h2>Get a website like this for your restaurant.</h2>
+    <div class="seller-main">
+      <p class="seller-kicker">These are only examples</p>
+      <h2>Your website can look however you want.</h2>
+      <p class="seller-lead">
+        Every site is built around your restaurant: your photos, your menu, your colors and your logo.
+        Keep the sections you want, drop the ones you don't, and add anything that isn't here.
+      </p>
+      <p class="seller-sub">Some things restaurants ask for:</p>
+      <ul class="seller-chips">
+        <li>Photo galleries</li>
+        <li>Full menu or PDF menu</li>
+        <li>Online ordering</li>
+        <li>Catering packages</li>
+        <li>Party &amp; event booking</li>
+        <li>Gift cards</li>
+        <li>Weekly specials</li>
+        <li>Real Google reviews</li>
+        <li>Feedback form</li>
+        <li>Hours &amp; map</li>
+        <li>Job applications</li>
+        <li>Kids' menu</li>
+        <li>Events calendar</li>
+        <li>Spanish version</li>
+      </ul>
       <ul class="seller-list">
-        <li>✓ Custom design in your colors and style</li>
-        <li>✓ Hosting, domain and SSL handled for you</li>
-        <li>✓ Menu, hours and photo updates whenever you need</li>
-        <li>✓ Feedback and reservation forms sent to your email</li>
-        <li>✓ Looks great on phones, where most of your customers are</li>
+        <li>Hosting, domain and security handled for you</li>
+        <li>Menu, hours and photo changes whenever you need them</li>
+        <li>Built for phones first, where most of your customers find you</li>
       </ul>
     </div>
     <div class="seller-contact">
       <p class="seller-name" id="sellerName"></p>
+      <p class="seller-contact-note">Send me a few photos and your menu, and I'll show you a version made for your restaurant.</p>
       <a class="btn seller-btn" id="sellerEmail" href="#"></a>
       <a class="seller-phone" id="sellerPhone" href="#"></a>
     </div>
   </section>
+
+  <!-- Photo viewer -->
+  <div class="lightbox" id="lightbox" hidden>
+    <button class="lb-close" id="lbClose" aria-label="Close">×</button>
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="Previous photo">‹</button>
+    <figure><img id="lbImg" alt="" /><figcaption id="lbCap"></figcaption></figure>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="Next photo">›</button>
+  </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

@@ -53,7 +53,7 @@
     if (direction) site.classList.add(direction > 0 ? "slide-left" : "slide-right");
 
     document.body.dataset.theme = th.id;
-    document.title = `${th.name} · Restaurant Website Demo`;
+    document.title = `${th.name} · Restaurant Website Example`;
 
     // simple text bindings
     $$("[data-bind]").forEach((el) => {
@@ -66,9 +66,36 @@
     $("#themeCount").textContent = `${state.index + 1} / ${THEMES.length}`;
     $$("#themeDots button").forEach((d, i) => d.classList.toggle("active", i === state.index));
 
+    // hero photo + layout
+    $("#hero").style.setProperty("--hero-img", `url("${new URL(th.hero.img, location.href).href}")`);
+    $("#hero").dataset.layout = th.hero.layout;
+
+    // header button
+    const hc = $("#headerCta");
+    hc.textContent = th.headerCta[0];
+    hc.dataset.action = th.headerCta[1];
+
     // highlights
     $("#highlights").innerHTML = th.highlights
-      .map(([icon, t, d]) => `<div class="highlight"><span class="hl-icon">${icon}</span><div><strong>${esc(t)}</strong><p>${esc(d)}</p></div></div>`)
+      .map(([t, d]) => `<div class="highlight"><strong>${esc(t)}</strong><p>${esc(d)}</p></div>`)
+      .join("");
+
+    // about photo
+    $("#aboutImg").src = th.aboutImg;
+
+    // feature block
+    const ft = th.feature;
+    $("#featureKicker").textContent = ft.kicker;
+    $("#featureTitle").textContent = ft.title;
+    $("#featureText").textContent = ft.text;
+    $("#featureImg").src = ft.img;
+    $("#featureList").innerHTML = ft.list.map(([a, b]) => `<li><strong>${esc(a)}</strong><span>${esc(b)}</span></li>`).join("");
+    $("#featureCta").textContent = ft.cta[0];
+    $("#featureCta").dataset.action = ft.cta[1];
+
+    // gallery
+    $("#galleryGrid").innerHTML = th.gallery
+      .map(([src, cap], i) => `<button class="g-item" data-i="${i}" aria-label="View photo: ${esc(cap)}"><img src="${src}" alt="${esc(cap)}" loading="lazy" /><span>${esc(cap)}</span></button>`)
       .join("");
 
     // stats
@@ -106,7 +133,7 @@
       .join("");
 
     $("#dietFilters").innerHTML = Object.entries(DIET)
-      .map(([k, v]) => `<button data-diet="${k}" class="chip ${state.diet.has(k) ? "active" : ""}" aria-pressed="${state.diet.has(k)}">${v.short} ${v.label}</button>`)
+      .map(([k, v]) => `<button data-diet="${k}" class="chip ${state.diet.has(k) ? "active" : ""}" aria-pressed="${state.diet.has(k)}">${v.label}</button>`)
       .join("");
 
     $$(".layout-switch button").forEach((b) => b.classList.toggle("active", b.dataset.layout === state.layout));
@@ -124,11 +151,11 @@
     }
 
     box.innerHTML = items
-      .map(([name, desc, price, tags], i) => {
+      .map(([name, desc, price, tags, img], i) => {
         const tagHtml = tags.map((t) => `<span class="tag tag-${t}" title="${DIET[t].label}">${DIET[t].short}</span>`).join("");
         return `
-        <article class="dish" style="--i:${i}">
-          <div class="dish-photo" aria-hidden="true"><span>${th.heroEmoji}</span><small>Your photo here</small></div>
+        <article class="dish${img ? " has-photo" : ""}" style="--i:${i}">
+          ${img ? `<div class="dish-photo"><img src="${img}" alt="" loading="lazy" /></div>` : ""}
           <div class="dish-body">
             <div class="dish-line">
               <h4>${esc(name)}</h4>
@@ -235,7 +262,7 @@
         <div><b>To:</b> ${esc(th.ownerEmail)}</div>
         <div><b>From:</b> Website Feedback &lt;no-reply@${esc(th.ownerEmail.split("@")[1])}&gt;</div>
         <div><b>Reply-To:</b> ${d.email ? esc(d.email) : "<i>not provided</i>"}</div>
-        <div><b>Subject:</b> ${d.lowRating ? "⚠️ " : ""}New feedback: ${esc(d.topic)} (${stars})</div>
+        <div><b>Subject:</b> ${d.lowRating ? "[Low rating] " : ""}New feedback: ${esc(d.topic)} (${stars})</div>
       </div>
       <div class="ep-body">
         <p><b>${esc(d.name)}</b> wrote:</p>
@@ -243,8 +270,34 @@
         ${d.lowRating ? `<p class="ep-flag">Low rating: a text alert was also sent to ${esc(th.phone)}.</p>` : ""}
       </div>`;
     p.hidden = false;
-    toast(`✅ Demo: this would be delivered to <b>${esc(th.ownerEmail)}</b>`);
+    toast(`Example only: on a real site this goes to <b>${esc(th.ownerEmail)}</b>`);
   }
+
+  /* ---------------- photo viewer ---------------- */
+  let lbIndex = 0;
+  function openLightbox(i) {
+    const g = THEMES[state.index].gallery;
+    lbIndex = (i + g.length) % g.length;
+    $("#lbImg").src = g[lbIndex][0];
+    $("#lbImg").alt = g[lbIndex][1];
+    $("#lbCap").textContent = g[lbIndex][1];
+    $("#lightbox").hidden = false;
+    document.body.classList.add("lb-open");
+  }
+  function closeLightbox() {
+    $("#lightbox").hidden = true;
+    document.body.classList.remove("lb-open");
+  }
+  function setupLightbox() {
+    $("#galleryGrid").addEventListener("click", (e) => {
+      const b = e.target.closest(".g-item"); if (b) openLightbox(Number(b.dataset.i));
+    });
+    $("#lbClose").addEventListener("click", closeLightbox);
+    $("#lbPrev").addEventListener("click", () => openLightbox(lbIndex - 1));
+    $("#lbNext").addEventListener("click", () => openLightbox(lbIndex + 1));
+    $("#lightbox").addEventListener("click", (e) => { if (e.target.id === "lightbox") closeLightbox(); });
+  }
+  const lbOpen = () => !$("#lightbox").hidden;
 
   /* ---------------- navigation between themes ---------------- */
   function go(delta) {
@@ -263,7 +316,7 @@
     let x0 = null, y0 = null, t0 = 0;
     const target = document;
     target.addEventListener("touchstart", (e) => {
-      if (e.target.closest("input, textarea, select, .menu-tabs")) { x0 = null; return; }
+      if (lbOpen() || e.target.closest("input, textarea, select, .menu-tabs")) { x0 = null; return; }
       x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = Date.now();
     }, { passive: true });
     target.addEventListener("touchend", (e) => {
@@ -292,6 +345,12 @@
     $("#nextTheme").addEventListener("click", () => go(1));
     document.addEventListener("keydown", (e) => {
       if (e.target.closest("input, textarea, select")) return;
+      if (lbOpen()) {
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowRight") openLightbox(lbIndex + 1);
+        if (e.key === "ArrowLeft") openLightbox(lbIndex - 1);
+        return;
+      }
       if (e.key === "ArrowRight") go(1);
       if (e.key === "ArrowLeft") go(-1);
     });
@@ -321,11 +380,14 @@
 
     // demo-only buttons
     const actions = {
-      reserve: "📅 Reservations can link to OpenTable, Resy, or a simple form sent to your email.",
-      order: "🛍️ Online ordering can connect to Toast, Square, Clover, or DoorDash Storefront.",
-      pdf: "📄 A printable PDF menu, generated from the same menu you see here.",
-      directions: "🗺️ Opens Google or Apple Maps with directions to your door.",
-      social: "📸 Links to your Instagram, Facebook and TikTok.",
+      reserve: "Bookings can go through OpenTable, Resy, or a simple form that emails you.",
+      order: "Online ordering links to whatever you already use: Toast, Square, Clover or DoorDash.",
+      pdf: "A printable PDF menu, kept in sync with the menu on the page.",
+      directions: "Opens Google or Apple Maps with directions to your door.",
+      social: "Links to your Instagram, Facebook or TikTok.",
+      quote: "A quote form collects the date, headcount and address, and emails it to you.",
+      gift: "Gift cards can be sold online through Square, Toast or Stripe and emailed to the buyer.",
+      call: "On a phone this button calls the restaurant directly.",
     };
     document.addEventListener("click", (e) => {
       const a = e.target.closest(".demo-action");
@@ -341,7 +403,7 @@
     // seller CTA
     $("#sellerName").textContent = `${SELLER.name} · ${SELLER.business}`;
     const se = $("#sellerEmail");
-    se.textContent = "✉ " + SELLER.email;
+    se.textContent = "Email " + SELLER.email;
     se.href = `mailto:${SELLER.email}?subject=${encodeURIComponent("Website for my restaurant")}`;
     const sp = $("#sellerPhone");
     sp.textContent = SELLER.phone;
@@ -359,6 +421,7 @@
       if (i >= 0) goTo(i);
     });
 
+    setupLightbox();
     setTimeout(hideHint, 6000);
     setInterval(renderHours, 60000);
   }
